@@ -3,74 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riko Fitness</title>
+    <title>RIKO FITNESS v2.0</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <header class="app-header">
-            <h1>Riko <span class="version">Fitness</span></h1>
-            <div class="user-info" id="user-info"></div>
+        <!-- Профиль пользователя -->
+        <header class="app-header" id="user-profile">
+            <div class="profile-pic" id="user-avatar"></div>
+            <div class="profile-info">
+                <h2 id="user-name">Загрузка...</h2>
+                <p id="user-stats">Не заполнено</p>
+            </div>
+            <button class="edit-profile-btn" id="edit-profile-btn">✏️</button>
         </header>
 
-        <main class="main-content">
-            <section class="dashboard" id="main-view">
-                <div class="stats-card">
-                    <h3>Текущая серия</h3>
-                    <p class="big-text" id="streak-days">0 дней</p>
-                </div>
-                
-                <div class="stats-card">
-                    <h3>Всего тренировок</h3>
-                    <p class="big-text" id="total-workouts">0</p>
-                </div>
+        <!-- Анкета -->
+        <section class="onboarding" id="onboarding-view">
+            <h2>Давай познакомимся!</h2>
+            <div class="input-group">
+                <label>Возраст</label>
+                <input type="number" id="input-age" placeholder="25" min="10" max="100">
+            </div>
+            <div class="input-group">
+                <label>Рост (см)</label>
+                <input type="number" id="input-height" placeholder="175" min="100" max="250">
+            </div>
+            <div class="input-group">
+                <label>Вес (кг)</label>
+                <input type="number" id="input-weight" placeholder="70" min="30" max="200">
+            </div>
+            <button class="primary-btn" id="save-profile-btn">Сохранить</button>
+        </section>
 
-                <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
-                <button class="secondary-btn" id="view-progress-btn">Мой прогресс</button>
-            </section>
+        <!-- Главное меню -->
+        <section class="main-content" id="main-view" style="display: none;">
+            <div class="stats-card">
+                <h3>Текущая серия</h3>
+                <p class="big-text" id="streak-days">0 дней</p>
+            </div>
+            
+            <div class="stats-card">
+                <h3>Сожжено сегодня</h3>
+                <p class="big-text" id="calories-burned">0 ккал</p>
+            </div>
 
-            <section class="workout-selection" id="workout-view" style="display: none;">
-                <h2>Выберите тип тренировки</h2>
-                <div class="workout-options">
-                    <div class="workout-card" data-level="beginner">
-                        <h3>👶 Начинающий</h3>
-                        <p>15-20 минут • Базовые упражнения</p>
-                    </div>
-                    <div class="workout-card" data-level="intermediate">
-                        <h3>💪 Продвинутый</h3>
-                        <p>25-30 минут • Интенсивные упражнения</p>
-                    </div>
+            <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
+            <button class="secondary-btn" id="view-progress-btn">Мой прогресс</button>
+        </section>
+
+        <!-- Выбор типа тренировки -->
+        <section class="workout-selection" id="workout-type-view" style="display: none;">
+            <h2>Выберите тип тренировки</h2>
+            <div class="workout-options">
+                <div class="workout-card" data-type="strength">
+                    <h3>💪 Силовая</h3>
+                    <p>Гантели, штанги, вес тела</p>
                 </div>
-                <button class="back-btn" id="back-to-main-btn">← Назад</button>
-            </section>
+                <div class="workout-card" data-type="cardio">
+                    <h3>🏃 Кардио</h3>
+                    <p>Бег, прыжки, интервалы</p>
+                </div>
+                <div class="workout-card" data-type="mixed">
+                    <h3>⚡ Совмещённая</h3>
+                    <p>Комбо: сила + кардио</p>
+                </div>
+            </div>
+            <div class="equipment-check">
+                <label>
+                    <input type="checkbox" id="has-equipment"> 
+                    У меня есть снаряжение (гантели, коврик)
+                </label>
+            </div>
+            <button class="back-btn" id="back-to-main-btn">← Назад</button>
+        </section>
 
-            <section class="workout-in-progress" id="workout-progress-view" style="display: none;">
+        <!-- Выбор уровня -->
+        <section class="level-selection" id="workout-level-view" style="display: none;">
+            <h2>Ваш уровень</h2>
+            <div class="level-options">
+                <div class="level-card" data-level="beginner">
+                    <h3>👶 Начинающий</h3>
+                    <p>Новичок в тренировках</p>
+                </div>
+                <div class="level-card" data-level="intermediate">
+                    <h3>💪 Опытный</h3>
+                    <p>Тренируюсь регулярно</p>
+                </div>
+                <div class="level-card" data-level="advanced">
+                    <h3>🔥 Профи</h3>
+                    <p>Опыт 2+ года</p>
+                </div>
+            </div>
+            <button class="back-btn" id="back-to-type-btn">← Назад</button>
+        </section>
+
+        <!-- Тренировка -->
+        <section class="workout-in-progress" id="workout-progress-view" style="display: none;">
+            <div class="workout-header">
                 <h2 id="workout-title">Тренировка</h2>
-                <div class="exercise-list" id="exercise-container"></div>
-                <button class="complete-btn" id="complete-workout-btn">Завершить тренировку</button>
-            </section>
-
-            <section class="progress-view" id="progress-view" style="display: none;">
-                <h2>Ваш прогресс</h2>
-                <div class="progress-stats">
-                    <div class="stat-item">
-                        <span>Текущая серия</span>
-                        <span id="progress-streak">0 дней</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Всего тренировок</span>
-                        <span id="progress-total">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Последняя тренировка</span>
-                        <span id="last-workout">Никогда</span>
-                    </div>
+                <p class="workout-progress" id="workout-progress">Упражнение 1/5</p>
+            </div>
+            
+            <div class="exercise-timer">
+                <h3 id="current-exercise-name">Приседания</h3>
+                <div class="timer-circle" id="exercise-timer">
+                    <span>00:30</span>
                 </div>
-                <canvas id="progress-chart"></canvas>
-                <button class="back-btn" id="back-to-main-btn-2">← Назад</button>
-            </section>
-        </main>
+                <p class="exercise-target" id="exercise-target">Цель: 3×12 повт.</p>
+            </div>
+            
+            <div class="exercise-completion">
+                <h4>Сколько выполнили?</h4>
+                <div class="reps-counter">
+                    <button class="counter-btn" id="decrease-reps">−</button>
+                    <span id="completed-reps">12</span>
+                    <button class="counter-btn" id="increase-reps">+</button>
+                </div>
+                <small>Рекомендуется: <span id="target-reps">12</span></small>
+                <button class="complete-btn" id="next-exercise-btn">Готово</button>
+            </div>
+        </section>
+
+        <!-- Прогресс -->
+        <section class="progress-view" id="progress-view" style="display: none;">
+            <h2>Ваш прогресс</h2>
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <span>Текущая серия</span>
+                    <span id="progress-streak">0 дней</span>
+                </div>
+                <div class="stat-item">
+                    <span>Всего тренировок</span>
+                    <span id="progress-total">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Средняя активность</span>
+                    <span id="avg-activity">15 мин/день</span>
+                </div>
+            </div>
+            <canvas id="progress-chart"></canvas>
+            <button class="back-btn" id="back-to-main-btn-2">← На главную</button>
+        </section>
     </div>
 
     <script src="app.js"></script>
