@@ -1,0 +1,10 @@
+{
+    "name": "Riko Fitness",
+    "short_name": "Riko",
+    "description": "RIKO FITNESS — это инновационное фитнес-приложение в Telegram, созданное для тех, кто ценит удобство и эффективность тренировок.",
+    "manifest_version": 1,
+    "theme_color": "#6C63FF",
+    "background_color": "#F5F5F7",
+    "display": "standalone",
+    "start_url": "index.html"
+}

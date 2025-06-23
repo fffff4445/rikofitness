@@ -1,0 +1,195 @@
+:root {
+    --primary-color: #6C63FF;
+    --secondary-color: #4D44DB;
+    --background-color: #F5F5F7;
+    --card-color: #FFFFFF;
+    --text-color: #333333;
+    --light-text: #777777;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.app-container {
+    max-width: 100%;
+    min-height: 100vh;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.version {
+    color: var(--light-text);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.user-info {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.stats-card {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stats-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--light-text);
+    font-weight: 500;
+}
+
+.big-text {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.secondary-btn {
+    background-color: var(--card-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.back-btn {
+    background: none;
+    color: var(--primary-color);
+    font-size: 14px;
+    padding: 8px;
+    width: auto;
+}
+
+.workout-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.workout-card {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.workout-card:hover {
+    transform: translateY(-2px);
+}
+
+.workout-card h3 {
+    margin: 0 0 4px 0;
+}
+
+.workout-card p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.exercise-item {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exercise-info h4 {
+    margin: 0 0 4px 0;
+}
+
+.exercise-info p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.complete-btn {
+    background-color: #4CAF50;
+    color: white;
+    margin-top: 24px;
+}
+
+.progress-stats {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+#progress-chart {
+    width: 100%;
+    max-height: 300px;
+    margin: 20px 0;
+}

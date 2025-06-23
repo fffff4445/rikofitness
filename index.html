@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riko Fitness</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Riko <span class="version">Fitness</span></h1>
+            <div class="user-info" id="user-info"></div>
+        </header>
+
+        <main class="main-content">
+            <section class="dashboard" id="main-view">
+                <div class="stats-card">
+                    <h3>Текущая серия</h3>
+                    <p class="big-text" id="streak-days">0 дней</p>
+                </div>
+                
+                <div class="stats-card">
+                    <h3>Всего тренировок</h3>
+                    <p class="big-text" id="total-workouts">0</p>
+                </div>
+
+                <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
+                <button class="secondary-btn" id="view-progress-btn">Мой прогресс</button>
+            </section>
+
+            <section class="workout-selection" id="workout-view" style="display: none;">
+                <h2>Выберите тип тренировки</h2>
+                <div class="workout-options">
+                    <div class="workout-card" data-level="beginner">
+                        <h3>👶 Начинающий</h3>
+                        <p>15-20 минут • Базовые упражнения</p>
+                    </div>
+                    <div class="workout-card" data-level="intermediate">
+                        <h3>💪 Продвинутый</h3>
+                        <p>25-30 минут • Интенсивные упражнения</p>
+                    </div>
+                </div>
+                <button class="back-btn" id="back-to-main-btn">← Назад</button>
+            </section>
+
+            <section class="workout-in-progress" id="workout-progress-view" style="display: none;">
+                <h2 id="workout-title">Тренировка</h2>
+                <div class="exercise-list" id="exercise-container"></div>
+                <button class="complete-btn" id="complete-workout-btn">Завершить тренировку</button>
+            </section>
+
+            <section class="progress-view" id="progress-view" style="display: none;">
+                <h2>Ваш прогресс</h2>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <span>Текущая серия</span>
+                        <span id="progress-streak">0 дней</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Всего тренировок</span>
+                        <span id="progress-total">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Последняя тренировка</span>
+                        <span id="last-workout">Никогда</span>
+                    </div>
+                </div>
+                <canvas id="progress-chart"></canvas>
+                <button class="back-btn" id="back-to-main-btn-2">← Назад</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
