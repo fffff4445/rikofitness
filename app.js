@@ -6,16 +6,14 @@ tg.expand();
 let userData = {
     isFirstTime: true,
     name: "",
-    age: null,
     height: null,
     weight: null,
     birthdate: null,
-    equipment: false,
-    streak: 0
+    workoutsCompleted: 0,
+    level: "beginner"
 };
 
 let currentWorkout = {
-    type: null,
     exercises: [
         { name: "Приседания", sets: 3, reps: 12, duration: 30 },
         { name: "Отжимания", sets: 3, reps: 10, duration: 45 }
@@ -26,14 +24,14 @@ let currentWorkout = {
 
 // DOM элементы
 const elements = {
-    // Профиль
+    profileHeader: document.getElementById('profile-header'),
     userName: document.getElementById('user-name'),
-    userStats: document.getElementById('user-stats'),
+    userAge: document.getElementById('user-age'),
+    userStatus: document.getElementById('user-status'),
     userAvatar: document.getElementById('user-avatar'),
     
     // Анкета
     onboardingView: document.getElementById('onboarding-view'),
-    inputAge: document.getElementById('input-age'),
     inputHeight: document.getElementById('input-height'),
     inputWeight: document.getElementById('input-weight'),
     inputBirthdate: document.getElementById('input-birthdate'),
@@ -42,10 +40,18 @@ const elements = {
     // Главный экран
     mainView: document.getElementById('main-view'),
     startWorkoutBtn: document.getElementById('start-workout-btn'),
-    streakDays: document.getElementById('streak-days'),
+    workoutCount: document.getElementById('workout-count'),
+    
+    // Модалка профиля
+    profileModal: document.getElementById('profile-modal'),
+    profileHeight: document.getElementById('profile-height'),
+    profileWeight: document.getElementById('profile-weight'),
+    profileBirthdate: document.getElementById('profile-birthdate'),
+    profileWorkouts: document.getElementById('profile-workouts'),
+    editProfileBtn: document.getElementById('edit-profile-btn'),
+    closeProfileBtn: document.getElementById('close-profile-btn'),
     
     // Тренировка
-    workoutSelectionView: document.getElementById('workout-selection-view'),
     workoutScreenView: document.getElementById('workout-screen-view'),
     currentExercise: document.getElementById('current-exercise'),
     exerciseTimer: document.getElementById('exercise-timer'),
@@ -73,6 +79,7 @@ function loadUserData() {
         userData = JSON.parse(savedData);
     }
     
+    // Данные из Telegram
     if (tg.initDataUnsafe.user) {
         const user = tg.initDataUnsafe.user;
         userData.name = `${user.first_name} ${user.last_name || ''}`.trim();
@@ -91,75 +98,95 @@ function saveUserData() {
 
 // Обновление интерфейса
 function updateUI() {
-    elements.userName.textContent = userData.name || "Пользователь";
-    
-    if (userData.age && userData.height && userData.weight) {
-        elements.userStats.textContent = 
-            `${userData.age} лет • ${userData.height}см • ${userData.weight}кг`;
-    } else {
-        elements.userStats.textContent = "Не заполнено";
+    // Имя и возраст
+    elements.userName.textContent = userData.name;
+    if (userData.birthdate) {
+        const age = calculateAge(userData.birthdate);
+        elements.userAge.textContent = `(${age})`;
     }
     
-    elements.streakDays.textContent = `Тренировок: ${userData.streak}`;
+    // Статус
+    let status = "Новичок";
+    if (userData.workoutsCompleted >= 20) status = "Опытный";
+    if (userData.workoutsCompleted >= 50) status = "Профи";
+    elements.userStatus.textContent = `Статус: ${status}`;
+    
+    // Прогресс
+    elements.workoutCount.textContent = `Тренировок: ${userData.workoutsCompleted}`;
+}
+
+// Расчет возраста
+function calculateAge(birthdate) {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    
+    return age;
 }
 
 // Обработчики событий
 function setupEventListeners() {
     // Сохранение профиля
-    elements.saveProfileBtn.addEventListener('click', () => {
-        const age = parseInt(elements.inputAge.value);
-        const height = parseInt(elements.inputHeight.value);
-        const weight = parseInt(elements.inputWeight.value);
-        const birthdate = elements.inputBirthdate.value;
-        
-        if (!age || !height || !weight || !birthdate) {
-            tg.showAlert("Заполните все поля!");
-            return;
-        }
-        
-        userData = {
-            ...userData,
-            age,
-            height,
-            weight,
-            birthdate,
-            isFirstTime: false
-        };
-        
-        saveUserData();
-        updateUI();
-        showMainView();
-        tg.showAlert("Профиль сохранен!");
-    });
+    elements.saveProfileBtn.addEventListener('click', saveProfile);
     
-    // Навигация
-    elements.startWorkoutBtn.addEventListener('click', () => {
-        showWorkoutSelection();
-    });
-    
-    document.getElementById('back-to-main-btn').addEventListener('click', showMainView);
+    // Открытие профиля
+    elements.profileHeader.addEventListener('click', showProfileModal);
+    elements.closeProfileBtn.addEventListener('click', hideProfileModal);
+    elements.editProfileBtn.addEventListener('click', editProfile);
     
     // Тренировка
-    document.querySelectorAll('.workout-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            userData.equipment = document.getElementById('has-equipment').checked;
-            startWorkout(e.currentTarget.dataset.type);
-        });
-    });
-    
+    elements.startWorkoutBtn.addEventListener('click', startWorkout);
     elements.completeExerciseBtn.addEventListener('click', completeExercise);
-    document.getElementById('increase-reps').addEventListener('click', () => {
-        elements.completedReps.textContent = parseInt(elements.completedReps.textContent) + 1;
-    });
-    document.getElementById('decrease-reps').addEventListener('click', () => {
-        const reps = parseInt(elements.completedReps.textContent);
-        if (reps > 0) elements.completedReps.textContent = reps - 1;
-    });
+    document.getElementById('increase-reps').addEventListener('click', () => changeReps(1));
+    document.getElementById('decrease-reps').addEventListener('click', () => changeReps(-1));
 }
 
-// Тренировка
-function startWorkout(type) {
-    currentWorkout.type = type;
+function saveProfile() {
+    userData.height = parseInt(elements.inputHeight.value);
+    userData.weight = parseInt(elements.inputWeight.value);
+    userData.birthdate = elements.inputBirthdate.value;
+    
+    if (!userData.height || !userData.weight || !userData.birthdate) {
+        tg.showAlert("Заполните все поля!");
+        return;
+    }
+    
+    userData.isFirstTime = false;
+    saveUserData();
+    updateUI();
+    showMainView();
+    tg.showAlert("Профиль сохранен!");
+}
+
+function showProfileModal() {
+    if (!userData.height) return;
+    
+    elements.profileHeight.textContent = userData.height;
+    elements.profileWeight.textContent = userData.weight;
+    elements.profileBirthdate.textContent = new Date(userData.birthdate).toLocaleDateString();
+    elements.profileWorkouts.textContent = userData.workoutsCompleted;
+    
+    elements.profileModal.style.display = 'block';
+}
+
+function hideProfileModal() {
+    elements.profileModal.style.display = 'none';
+}
+
+function editProfile() {
+    hideProfileModal();
+    showOnboarding();
+    elements.inputHeight.value = userData.height;
+    elements.inputWeight.value = userData.weight;
+    elements.inputBirthdate.value = userData.birthdate;
+}
+
+function startWorkout() {
     currentWorkout.currentExercise = 0;
     showExercise();
 }
@@ -196,8 +223,13 @@ function updateTimer(seconds) {
     elements.exerciseTimer.textContent = `${mins}:${secs < 10 ? '0' + secs : secs}`;
 }
 
+function changeReps(change) {
+    const reps = parseInt(elements.completedReps.textContent) + change;
+    if (reps >= 0) elements.completedReps.textContent = reps;
+}
+
 function completeExercise() {
-    if (currentWorkout.timer) clearInterval(currentWorkout.timer);
+    clearInterval(currentWorkout.timer);
     
     currentWorkout.currentExercise++;
     if (currentWorkout.currentExercise < currentWorkout.exercises.length) {
@@ -208,8 +240,9 @@ function completeExercise() {
 }
 
 function finishWorkout() {
-    userData.streak++;
+    userData.workoutsCompleted++;
     saveUserData();
+    updateUI();
     showMainView();
     tg.showAlert("Тренировка завершена! 🎉");
 }
@@ -229,11 +262,6 @@ function showMainView() {
     hideAllViews();
     elements.mainView.style.display = 'block';
     updateUI();
-}
-
-function showWorkoutSelection() {
-    hideAllViews();
-    elements.workoutSelectionView.style.display = 'block';
 }
 
 function showWorkoutScreen() {
