@@ -5,6 +5,11 @@
     --card-color: #FFFFFF;
     --text-color: #333333;
     --light-text: #777777;
+    --success-color: #4CAF50;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -13,6 +18,7 @@ body {
     padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
+    line-height: 1.5;
 }
 
 .app-container {
@@ -24,59 +30,97 @@ body {
 
 .app-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 15px;
     margin-bottom: 24px;
+    position: relative;
 }
 
-.app-header h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.version {
-    color: var(--light-text);
-    font-size: 16px;
-    font-weight: 400;
-}
-
-.user-info {
-    width: 40px;
-    height: 40px;
+.profile-pic {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.profile-info p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.edit-profile-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+.onboarding {
+    padding: 20px;
+}
+
+.onboarding h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--light-text);
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
 }
 
 .stats-card {
     background-color: var(--card-color);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 15px;
+    padding: 18px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .stats-card h3 {
     margin: 0 0 8px 0;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--light-text);
     font-weight: 500;
 }
 
 .big-text {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     margin: 0;
 }
 
 button {
     width: 100%;
-    padding: 14px;
+    padding: 16px;
     border: none;
     border-radius: 12px;
     font-size: 16px;
@@ -104,83 +148,157 @@ button {
 .back-btn {
     background: none;
     color: var(--primary-color);
-    font-size: 14px;
-    padding: 8px;
+    font-size: 15px;
+    padding: 10px;
     width: auto;
+    margin-top: 10px;
 }
 
-.workout-options {
+.workout-options, .level-options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
+    margin-bottom: 20px;
 }
 
-.workout-card {
+.workout-card, .level-card {
     background-color: var(--card-color);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    padding: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     cursor: pointer;
     transition: transform 0.2s;
 }
 
-.workout-card:hover {
-    transform: translateY(-2px);
+.workout-card:hover, .level-card:hover {
+    transform: translateY(-3px);
 }
 
-.workout-card h3 {
-    margin: 0 0 4px 0;
+.workout-card h3, .level-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
 }
 
-.workout-card p {
+.workout-card p, .level-card p {
     margin: 0;
     font-size: 14px;
     color: var(--light-text);
 }
 
-.exercise-list {
+.equipment-check {
+    margin: 20px 0;
+    padding: 0 5px;
+}
+
+.equipment-check label {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.equipment-check input {
+    width: 18px;
+    height: 18px;
+}
+
+.workout-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.workout-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.workout-progress {
+    margin: 5px 0 0;
+    color: var(--light-text);
+}
+
+.timer-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 25px auto;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+}
+
+.exercise-target {
+    text-align: center;
+    font-size: 16px;
+    color: var(--light-text);
+    margin: 10px 0;
+}
+
+.exercise-completion {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.exercise-completion h4 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.reps-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     margin: 20px 0;
 }
 
-.exercise-item {
+.reps-counter span {
+    font-size: 28px;
+    min-width: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.counter-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
     background-color: var(--card-color);
-    border-radius: 12px;
-    padding: 12px;
+    border: 1px solid #ddd;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-}
-
-.exercise-info h4 {
-    margin: 0 0 4px 0;
-}
-
-.exercise-info p {
-    margin: 0;
-    font-size: 14px;
-    color: var(--light-text);
+    justify-content: center;
+    padding: 0;
 }
 
 .complete-btn {
-    background-color: #4CAF50;
+    background-color: var(--success-color);
     color: white;
-    margin-top: 24px;
+    margin-top: 30px;
+}
+
+.complete-btn:hover {
+    background-color: #3e8e41;
 }
 
 .progress-stats {
     background-color: var(--card-color);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 20px;
+    border-radius: 15px;
+    padding: 18px;
+    margin-bottom: 25px;
 }
 
 .stat-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #eee;
 }
 
@@ -192,4 +310,22 @@ button {
     width: 100%;
     max-height: 300px;
     margin: 20px 0;
+}
+
+/* Адаптивность */
+@media (max-width: 400px) {
+    .timer-circle {
+        width: 120px;
+        height: 120px;
+        font-size: 24px;
+    }
+    
+    .reps-counter span {
+        font-size: 24px;
+    }
+    
+    .counter-btn {
+        width: 40px;
+        height: 40px;
+    }
 }
