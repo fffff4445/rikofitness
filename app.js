@@ -4,168 +4,171 @@ tg.expand();
 
 // Данные пользователя
 let userData = {
+    isFirstTime: true,
+    name: "",
+    age: null,
+    height: null,
+    weight: null,
+    level: "beginner",
+    equipment: false,
     streak: 0,
     totalWorkouts: 0,
     lastWorkout: null,
     workoutHistory: []
 };
 
-// Загрузка данных упражнений
-let exercises = {};
+// База упражнений
+const exercisesDB = {
+    strength: {
+        beginner: [
+            {
+                name: "Приседания",
+                sets: 3,
+                reps: 12,
+                duration: 30,
+                desc: "Держите спину прямо",
+                equipment: false
+            },
+            // ... другие упражнения
+        ],
+        advanced: [
+            // ... продвинутые упражнения
+        ]
+    },
+    // ... другие типы тренировок
+};
 
-fetch('exercises.json')
-    .then(response => response.json())
-    .then(data => {
-        exercises = data;
-        initApp();
-    })
-    .catch(error => {
-        console.error('Error loading exercises:', error);
-    });
+// Текущая сессия
+let currentWorkout = {
+    type: null,
+    level: null,
+    exercises: [],
+    currentExercise: 0,
+    startTime: null
+};
+
+// DOM элементы
+const elements = {
+    onboardingView: document.getElementById('onboarding-view'),
+    mainView: document.getElementById('main-view'),
+    workoutTypeView: document.getElementById('workout-type-view'),
+    workoutLevelView: document.getElementById('workout-level-view'),
+    workoutProgressView: document.getElementById('workout-progress-view'),
+    progressView: document.getElementById('progress-view'),
+    // ... остальные элементы
+};
 
 // Инициализация приложения
 function initApp() {
-    // Загружаем данные пользователя (в реальном приложении - с сервера)
     loadUserData();
+    setupEventListeners();
     
-    // Устанавливаем имя пользователя
-    const userInitial = tg.initDataUnsafe.user?.first_name?.charAt(0) || 'U';
-    document.getElementById('user-info').textContent = userInitial;
-    
-    // Навигация
-    document.getElementById('start-workout-btn').addEventListener('click', () => {
-        document.getElementById('main-view').style.display = 'none';
-        document.getElementById('workout-view').style.display = 'block';
-    });
-    
-    document.getElementById('view-progress-btn').addEventListener('click', showProgressView);
-    
-    document.getElementById('back-to-main-btn').addEventListener('click', showMainView);
-    document.getElementById('back-to-main-btn-2').addEventListener('click', showMainView);
-    
-    // Выбор тренировки
-    document.querySelectorAll('.workout-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const level = this.getAttribute('data-level');
-            startWorkout(level);
-        });
-    });
-    
-    // Завершение тренировки
-    document.getElementById('complete-workout-btn').addEventListener('click', completeWorkout);
+    if (userData.isFirstTime) {
+        showOnboarding();
+    } else {
+        showMainView();
+    }
 }
 
+// Загрузка данных пользователя
 function loadUserData() {
-    // В реальном приложении загружаем с сервера
-    const savedData = localStorage.getItem('fitnessUserData');
+    const savedData = localStorage.getItem('rikoFitnessData');
     if (savedData) {
         userData = JSON.parse(savedData);
+        updateProfileUI();
     }
     
-    updateUI();
+    // Загрузка профиля Telegram
+    if (tg.initDataUnsafe.user) {
+        const user = tg.initDataUnsafe.user;
+        userData.name = `${user.first_name} ${user.last_name || ''}`.trim();
+        
+        if (user.photo_url) {
+            document.getElementById('user-avatar').style.backgroundImage = 
+                `url(${user.photo_url})`;
+        }
+    }
 }
 
+// Сохранение данных
 function saveUserData() {
-    localStorage.setItem('fitnessUserData', JSON.stringify(userData));
-    updateUI();
+    localStorage.setItem('rikoFitnessData', JSON.stringify(userData));
 }
 
-function updateUI() {
-    document.getElementById('streak-days').textContent = `${userData.streak} ${pluralize(userData.streak, ['день', 'дня', 'дней'])}`;
-    document.getElementById('total-workouts').textContent = userData.totalWorkouts;
+// Обновление UI профиля
+function updateProfileUI() {
+    document.getElementById('user-name').textContent = userData.name || "Пользователь";
     
-    // Для страницы прогресса
-    document.getElementById('progress-streak').textContent = `${userData.streak} ${pluralize(userData.streak, ['день', 'дня', 'дней'])}`;
-    document.getElementById('progress-total').textContent = userData.totalWorkouts;
-    document.getElementById('last-workout').textContent = userData.lastWorkout ? 
-        new Date(userData.lastWorkout).toLocaleDateString() : 'Никогда';
+    if (userData.age && userData.height && userData.weight) {
+        document.getElementById('user-stats').textContent = 
+            `${userData.age} лет • ${userData.height}см • ${userData.weight}кг`;
+    }
     
-    // Обновляем график прогресса
-    updateProgressChart();
+    document.getElementById('streak-days').textContent = 
+        `${userData.streak} ${pluralize(userData.streak, ['день', 'дня', 'дней'])}`;
 }
 
-function pluralize(number, words) {
-    const cases = [2, 0, 1, 1, 1, 2];
-    return words[
-        number % 100 > 4 && number % 100 < 20 ? 2 : cases[Math.min(number % 10, 5)]
-    ];
+// Показ анкеты
+function showOnboarding() {
+    elements.onboardingView.style.display = 'block';
+    elements.mainView.style.display = 'none';
+    // ... скрыть другие view
 }
 
-function showMainView() {
-    document.getElementById('main-view').style.display = 'block';
-    document.getElementById('workout-view').style.display = 'none';
-    document.getElementById('workout-progress-view').style.display = 'none';
-    document.getElementById('progress-view').style.display = 'none';
-}
-
-function showProgressView() {
-    document.getElementById('main-view').style.display = 'none';
-    document.getElementById('progress-view').style.display = 'block';
-    updateProgressChart();
-}
-
-function startWorkout(level) {
-    document.getElementById('workout-view').style.display = 'none';
-    document.getElementById('workout-progress-view').style.display = 'block';
+// Начало тренировки
+function startWorkout(type, level) {
+    currentWorkout = {
+        type,
+        level,
+        exercises: getExercisesForWorkout(type, level),
+        currentExercise: 0,
+        startTime: new Date()
+    };
     
-    const workoutTitle = level === 'beginner' ? 'Тренировка для начинающих' : 'Продвинутая тренировка';
-    document.getElementById('workout-title').textContent = workoutTitle;
-    
-    const exerciseContainer = document.getElementById('exercise-container');
-    exerciseContainer.innerHTML = '';
-    
-    const workoutExercises = exercises[level];
-    workoutExercises.forEach(exercise => {
-        const exerciseEl = document.createElement('div');
-        exerciseEl.className = 'exercise-item';
-        exerciseEl.innerHTML = `
-            <div class="exercise-info">
-                <h4>${exercise.name}</h4>
-                <p>${exercise.sets} подхода × ${exercise.reps || exercise.duration}</p>
-            </div>
-            <div class="exercise-status">◯</div>
-        `;
-        exerciseContainer.appendChild(exerciseEl);
-    });
+    showExercise(currentWorkout.currentExercise);
 }
 
+// Таймер упражнения
+function startExerciseTimer(duration, onComplete) {
+    let timeLeft = duration;
+    const timerElement = document.getElementById('exercise-timer');
+    
+    const timer = setInterval(() => {
+        timeLeft--;
+        
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.querySelector('span').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            onComplete();
+        }
+    }, 1000);
+    
+    return timer;
+}
+
+// Завершение тренировки
 function completeWorkout() {
-    // Обновляем данные пользователя
-    userData.totalWorkouts += 1;
-    userData.streak += 1;
+    userData.totalWorkouts++;
+    userData.streak++;
     userData.lastWorkout = new Date().toISOString();
-    userData.workoutHistory.push({
-        date: new Date().toISOString(),
-        type: document.getElementById('workout-title').textContent
-    });
-    
     saveUserData();
     
-    // Показываем уведомление
-    tg.showAlert('Отличная работа! Тренировка завершена.');
-    
-    // Возвращаемся на главный экран
+    tg.showAlert("Тренировка завершена! 🎉");
     showMainView();
 }
 
-function updateProgressChart() {
-    const ctx = document.getElementById('progress-chart').getContext('2d');
-    
-    // В реальном приложении используем библиотеку Chart.js
-    // Здесь просто пример:
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    
-    // Простая визуализация
-    ctx.fillStyle = '#6C63FF';
-    const maxHeight = 100;
-    const width = 30;
-    const gap = 10;
-    
-    // Ограничим историю 7 последними тренировками
-    const recentWorkouts = userData.workoutHistory.slice(-7);
-    
-    recentWorkouts.forEach((workout, i) => {
-        const height = 20 + (i * 10);
-        ctx.fillRect(i * (width + gap), maxHeight - height, width, height);
-    });
+// Вспомогательные функции
+function pluralize(number, words) {
+    // ... реализация склонения
 }
+
+function getExercisesForWorkout(type, level) {
+    // ... фильтрация упражнений по уровню и снаряжению
+}
+
+// Запуск приложения
+document.addEventListener('DOMContentLoaded', initApp);
