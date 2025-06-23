@@ -329,3 +329,14 @@ button {
         height: 40px;
     }
 }
+
+/* Добавить стиль для поля даты */
+.input-group input[type="date"] {
+    padding: 11px 15px; /* Совпадает с другими полями */
+}
+
+/* Стиль для статуса загрузки */
+.profile-loading {
+    color: #999;
+    font-style: italic;
+}
