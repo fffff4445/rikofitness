@@ -6,52 +6,53 @@
     <title>RIKO FITNESS</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Профиль пользователя -->
-        <header class="app-header" id="user-profile">
+        <!-- Профиль -->
+        <header class="app-header">
             <div class="profile-pic" id="user-avatar"></div>
             <div class="profile-info">
-                <h2 id="user-name">Загрузка...</h2>
+                <h2 id="user-name">RIKO FITNESS</h2>
                 <p id="user-stats">Не заполнено</p>
             </div>
-            <button class="edit-profile-btn" id="edit-profile-btn">✏️</button>
         </header>
 
         <!-- Анкета -->
         <section class="onboarding" id="onboarding-view">
-            <h2>Давай познакомимся!</h2>
-           <div class="input-group">
-                <label>Дата рождения</label>
-                <input type="date" id="input-birthdate" min="1950-12-31" max="2011-12-31">
+            <h2>Заполните ваш профиль</h2>
+            
+            <div class="input-group">
+                <label>Возраст</label>
+                <input type="number" id="input-age" placeholder="25" min="14" max="100">
             </div>
+            
             <div class="input-group">
                 <label>Рост (см)</label>
                 <input type="number" id="input-height" placeholder="175" min="100" max="250">
             </div>
+            
             <div class="input-group">
                 <label>Вес (кг)</label>
                 <input type="number" id="input-weight" placeholder="70" min="30" max="200">
             </div>
+            
+            <div class="input-group">
+                <label>Дата рождения</label>
+                <input type="date" id="input-birthdate">
+            </div>
+            
             <button class="primary-btn" id="save-profile-btn">Сохранить</button>
         </section>
 
-        <!-- Главное меню -->
+        <!-- Главный экран -->
         <section class="main-content" id="main-view" style="display: none;">
             <div class="stats-card">
-                <h3>Текущая серия</h3>
-                <p class="big-text" id="streak-days">0 дней</p>
+                <h3>Ваш прогресс</h3>
+                <p id="streak-days">Тренировок: 0</p>
             </div>
             
-            <div class="stats-card">
-                <h3>Сожжено сегодня</h3>
-                <p class="big-text" id="calories-burned">0 ккал</p>
-            </div>
-
             <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
-            <button class="secondary-btn" id="view-progress-btn">Мой прогресс</button>
         </section>
 
         <!-- Выбор типа тренировки -->
