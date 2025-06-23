@@ -10,21 +10,17 @@
 <body>
     <div class="app-container">
         <!-- Профиль -->
-        <header class="app-header">
+        <header class="app-header" id="profile-header">
             <div class="profile-pic" id="user-avatar"></div>
             <div class="profile-info">
-                <h2 id="user-name">RIKO FITNESS</h2>
-                <p id="user-stats">Не заполнено</p>
+                <h2 id="user-name">RIKO FITNESS <span id="user-age"></span></h2>
+                <p id="user-status">Статус: Новичок</p>
             </div>
         </header>
 
         <!-- Анкета -->
         <section class="onboarding" id="onboarding-view">
             <h2>Заполните профиль</h2>
-            <div class="input-group">
-                <label>Возраст</label>
-                <input type="number" id="input-age" placeholder="25" min="14" max="100">
-            </div>
             <div class="input-group">
                 <label>Рост (см)</label>
                 <input type="number" id="input-height" placeholder="175" min="100" max="250">
@@ -43,30 +39,25 @@
         <!-- Главный экран -->
         <section class="main-content" id="main-view" style="display: none;">
             <div class="stats-card">
-                <h3>Ваш прогресс</h3>
-                <p id="streak-days">Тренировок: 0</p>
+                <h3>Прогресс</h3>
+                <p id="workout-count">Тренировок: 0</p>
             </div>
             <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
         </section>
 
-        <!-- Выбор тренировки -->
-        <section class="workout-selection" id="workout-selection-view" style="display: none;">
-            <h2>Выберите тип</h2>
-            <div class="workout-options">
-                <div class="workout-card" data-type="strength">
-                    <h3>💪 Силовая</h3>
-                    <p>С гантелями/без</p>
+        <!-- Окно профиля -->
+        <section class="profile-modal" id="profile-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Ваш профиль</h2>
+                <div class="profile-data">
+                    <p><strong>Рост:</strong> <span id="profile-height">-</span> см</p>
+                    <p><strong>Вес:</strong> <span id="profile-weight">-</span> кг</p>
+                    <p><strong>Дата рождения:</strong> <span id="profile-birthdate">-</span></p>
+                    <p><strong>Тренировок:</strong> <span id="profile-workouts">0</span></p>
                 </div>
-                <div class="workout-card" data-type="cardio">
-                    <h3>🏃 Кардио</h3>
-                    <p>Интервальные</p>
-                </div>
+                <button class="edit-btn" id="edit-profile-btn">Редактировать</button>
+                <button class="back-btn" id="close-profile-btn">Закрыть</button>
             </div>
-            <div class="equipment-check">
-                <input type="checkbox" id="has-equipment">
-                <label>Есть снаряжение</label>
-            </div>
-            <button class="back-btn" id="back-to-main-btn">← Назад</button>
         </section>
 
         <!-- Тренировка -->
