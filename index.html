@@ -13,8 +13,8 @@
         <header class="app-header" id="profile-header">
             <div class="profile-pic" id="user-avatar"></div>
             <div class="profile-info">
-                <h2 id="user-name">RIKO FITNESS <span id="user-age"></span></h2>
-                <p id="user-status">Статус: Новичок</p>
+                <h2 id="user-name">RIKO FITNESS</h2>
+                <p id="user-status">Статус: Не заполнено</p>
             </div>
         </header>
 
@@ -45,34 +45,65 @@
             <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
         </section>
 
-        <!-- Окно профиля -->
-        <section class="profile-modal" id="profile-modal" style="display: none;">
-            <div class="modal-content">
-                <h2>Ваш профиль</h2>
-                <div class="profile-data">
-                    <p><strong>Рост:</strong> <span id="profile-height">-</span> см</p>
-                    <p><strong>Вес:</strong> <span id="profile-weight">-</span> кг</p>
-                    <p><strong>Дата рождения:</strong> <span id="profile-birthdate">-</span></p>
-                    <p><strong>Тренировок:</strong> <span id="profile-workouts">0</span></p>
+        <!-- Выбор тренировки -->
+        <section class="workout-selection" id="workout-selection-view" style="display: none;">
+            <h2>Выберите тренировку</h2>
+            <div class="workout-options">
+                <div class="workout-card" data-type="mixed">
+                    <h3>⚡ Совмещённая</h3>
+                    <p>Сила + кардио</p>
                 </div>
-                <button class="edit-btn" id="edit-profile-btn">Редактировать</button>
-                <button class="back-btn" id="close-profile-btn">Закрыть</button>
+                <div class="workout-card" data-type="strength">
+                    <h3>💪 Силовая</h3>
+                    <p>С собственным весом</p>
+                </div>
+                <div class="workout-card" data-type="cardio">
+                    <h3>🏃 Кардио</h3>
+                    <p>Интервальная</p>
+                </div>
+                <div class="workout-card" data-type="walking">
+                    <h3>🚶 Ходьба</h3>
+                    <p>Скандинавская/обычная</p>
+                </div>
+                <div class="workout-card" data-type="cycling">
+                    <h3>🚴 Велоезда</h3>
+                    <p>Стационарный велосипед</p>
+                </div>
             </div>
+            <button class="back-btn" id="back-to-main-btn">← Назад</button>
         </section>
 
         <!-- Тренировка -->
         <section class="workout-screen" id="workout-screen-view" style="display: none;">
             <div class="exercise-info">
-                <h3 id="current-exercise">Приседания</h3>
-                <div class="timer" id="exercise-timer">00:30</div>
-                <p id="exercise-target">3 подхода × 12 повторений</p>
+                <h3 id="current-exercise">Упражнение</h3>
+                <div class="timer-container">
+                    <div class="timer" id="exercise-timer">00:00</div>
+                    <button class="timer-btn" id="start-timer-btn">▶️ Запустить</button>
+                </div>
+                <p id="exercise-target">Подходы: 0</p>
             </div>
             <div class="reps-counter">
                 <button id="decrease-reps">-</button>
-                <span id="completed-reps">12</span>
+                <span id="completed-reps">0</span>
                 <button id="increase-reps">+</button>
             </div>
             <button class="complete-btn" id="complete-exercise-btn">Готово</button>
+        </section>
+
+        <!-- Окно профиля -->
+        <section class="profile-modal" id="profile-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Ваш профиль</h2>
+                <div class="profile-data">
+                    <p><strong>Возраст:</strong> <span id="profile-age">-</span></p>
+                    <p><strong>Рост:</strong> <span id="profile-height">-</span> см</p>
+                    <p><strong>Вес:</strong> <span id="profile-weight">-</span> кг</p>
+                    <p><strong>Тренировок:</strong> <span id="profile-workouts">0</span></p>
+                </div>
+                <button class="edit-btn" id="edit-profile-btn">Редактировать</button>
+                <button class="back-btn" id="close-profile-btn">Закрыть</button>
+            </div>
         </section>
     </div>
 
