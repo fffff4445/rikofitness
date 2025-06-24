@@ -419,9 +419,23 @@ input[type="checkbox"] {
 }
 
 .reps-counter button {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 20px;
     background: var(--card);
-    border: 1px solid var(--border
+    border: 1px solid #ddd;
+}
+
+.reps-counter span {
+    font-size: 24px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.complete-btn {
+    background: #4CAF50;
+    color: white;
+    width: 100%;
+    margin-top: 16px;
+}
