@@ -5,44 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIKO FITNESS</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Профиль -->
+        <!-- Шапка профиля -->
         <header class="app-header" id="profile-header">
             <div class="profile-pic" id="user-avatar"></div>
             <div class="profile-info">
                 <h2 id="user-name">RIKO FITNESS</h2>
-                <p id="user-status">Статус: Не заполнено</p>
+                <div id="user-status" class="status"></div>
+                <p id="daily-calories">Сегодня: 0 ккал</p>
             </div>
         </header>
 
-        <!-- Анкета -->
-        <section class="onboarding" id="onboarding-view">
-            <h2>Заполните профиль</h2>
-            <div class="input-group">
-                <label>Рост (см)</label>
-                <input type="number" id="input-height" placeholder="175" min="100" max="250">
+        <!-- Главный экран -->
+        <section class="main-content" id="main-view">
+            <div class="stats-container">
+                <div class="weekly-progress">
+                    <h3>Недельная активность</h3>
+                    <canvas id="weekly-chart"></canvas>
+                    <p class="total-calories">Всего за неделю: <span id="weekly-total">0</span> ккал</p>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <span>Тренировок</span>
+                        <strong id="workout-count">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Сожжено</span>
+                        <strong id="total-calories">0</strong> ккал
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label>Вес (кг)</label>
-                <input type="number" id="input-weight" placeholder="70" min="30" max="200">
-            </div>
-            <div class="input-group">
-                <label>Дата рождения</label>
-                <input type="date" id="input-birthdate">
-            </div>
-            <button class="primary-btn" id="save-profile-btn">СОХРАНИТЬ</button>
+
+            <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
+            <button class="secondary-btn" id="open-profile-btn">Мой профиль</button>
         </section>
 
-        <!-- Главный экран -->
-        <section class="main-content" id="main-view" style="display: none;">
-            <div class="stats-card">
-                <h3>Прогресс</h3>
-                <p id="workout-count">Тренировок: 0</p>
+        <!-- Модальное окно профиля -->
+        <section class="modal" id="profile-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Мой профиль</h2>
+                    <button class="close-btn" id="close-profile-btn">&times;</button>
+                </div>
+                
+                <div class="profile-data">
+                    <div class="avatar-section">
+                        <div class="profile-pic-large" id="user-avatar-large"></div>
+                        <div>
+                            <h3 id="profile-name"></h3>
+                            <p id="profile-age"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span>Рост:</span>
+                            <strong id="profile-height">-</strong> см
+                        </div>
+                        <div class="stat-item">
+                            <span>Вес:</span>
+                            <strong id="profile-weight">-</strong> кг
+                        </div>
+                        <div class="stat-item">
+                            <span>Дата рождения:</span>
+                            <strong id="profile-birthdate">-</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>С нами с:</span>
+                            <strong id="profile-join-date">-</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="achievements">
+                        <div class="stat-card">
+                            <span>Тренировок</span>
+                            <strong id="profile-workouts">0</strong>
+                        </div>
+                        <div class="stat-card">
+                            <span>Всего сожжено</span>
+                            <strong id="profile-total-calories">0</strong> ккал
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Настройки</h3>
+                        <div class="setting-item">
+                            <label>Дни тренировок:</label>
+                            <div class="day-selector">
+                                <button class="day-btn" data-day="0">Пн</button>
+                                <button class="day-btn" data-day="1">Вт</button>
+                                <button class="day-btn" data-day="2">Ср</button>
+                                <button class="day-btn" data-day="3">Чт</button>
+                                <button class="day-btn" data-day="4">Пт</button>
+                                <button class="day-btn" data-day="5">Сб</button>
+                                <button class="day-btn" data-day="6">Вс</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label>Время тренировки:</label>
+                            <input type="time" id="workout-time" value="19:00">
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notifications-enabled"> Уведомления в чате
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>Следующее взвешивание:</label>
+                            <strong id="next-weighing">-</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="edit-btn" id="edit-profile-btn">Редактировать профиль</button>
             </div>
-            <button class="primary-btn" id="start-workout-btn">Начать тренировку</button>
         </section>
 
         <!-- Выбор тренировки -->
