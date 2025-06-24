@@ -5,6 +5,7 @@
     --card: #FFFFFF;
     --text: #333333;
     --light-text: #777777;
+    --success: #4CAF50;
 }
 
 * {
@@ -44,9 +45,10 @@ body {
     margin-bottom: 4px;
 }
 
-.profile-info h2 span {
+.profile-info h2 .age-badge {
     color: var(--light-text);
     font-size: 16px;
+    font-weight: normal;
 }
 
 .profile-info p {
@@ -105,6 +107,39 @@ button {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+.workout-selection {
+    padding: 16px;
+}
+
+.workout-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.workout-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.workout-card:hover {
+    transform: translateY(-3px);
+}
+
+.workout-card h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.workout-card p {
+    color: var(--light-text);
+    font-size: 14px;
+}
+
 .profile-modal {
     position: fixed;
     top: 0;
@@ -112,7 +147,7 @@ button {
     right: 0;
     bottom: 0;
     background: rgba(0,0,0,0.5);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 100;
@@ -148,11 +183,29 @@ button {
     padding: 16px;
 }
 
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
 .timer {
     font-size: 48px;
-    text-align: center;
-    margin: 24px 0;
     font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.timer-btn {
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    width: auto;
+}
+
+.exercise-info {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .reps-counter {
@@ -179,7 +232,7 @@ button {
 }
 
 .complete-btn {
-    background: #4CAF50;
+    background: var(--success);
     color: white;
     width: 100%;
     margin-top: 16px;
